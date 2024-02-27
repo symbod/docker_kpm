@@ -72,8 +72,8 @@ perform_de <- function(set_condition, set_counts, set_comparisons){
 #' @return Extracted results from the fit object
 #'
 #' @export
-compare_de_expr <- function(set_fit, set_comparisons, out_dir, lfc_up = 1, lfc_down = -1, alpha = 0.05, 
-                            strict = FALSE, padj = TRUE, logFC_thr=TRUE, write_output = TRUE){
+compare_de_expr <- function(set_fit, set_comparisons, out_dir, lfc_up = args$logFC_up, lfc_down = args$logFC_down, alpha = args$alpha, 
+                            strict = FALSE, padj = args$p_adj, logFC_thr=args$logFC, write_output = TRUE){
   de_results <- list()
   for (i in 1:length(set_comparisons)){
     # get results for each comparison
@@ -139,7 +139,7 @@ compare_de_expr <- function(set_fit, set_comparisons, out_dir, lfc_up = 1, lfc_d
 #'
 #' @export
 prepare_matrix <- function(counts, md, condition_name, comparisons, out_dir, network_proteins,
-                           lfc_up = args$logFC_up, lfc_down = args$logFC_dow, alpha = args$alpha, 
+                           lfc_up = args$logFC_up, lfc_down = args$logFC_down, alpha = args$alpha, 
                            strict = FALSE, padj = args$p_adj, logFC_thr=args$logFC, plot = TRUE, write_output = TRUE){
   if (write_output){
     # create output directories
