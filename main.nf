@@ -4,6 +4,7 @@ params.output = "./output/"
 params.meta_file = '' // Path to meta.txt
 params.count_file = '' // Path to count.txt
 params.network_file = '' // Path to network file
+
 params.logFC = true
 params.logFC_up = 1
 params.logFC_down = -1
@@ -28,7 +29,7 @@ process kpm_analysis {
 
     script:
     """
-        Rscript $script_file --meta_file ${meta_file} --count_file ${count_file} --network_file ${network_file} --out_dir ./ --logFC ${params.logFC} --logFC_up ${params.logFC_up} --logFC_down ${params.logFC_down} --p_adj ${params.p_adj} --alpha ${params.alpha}
+    Rscript $script_file --meta_file ${meta_file} --count_file ${count_file} --network_file ${network_file} --out_dir ${params.output} --logFC ${params.logFC} --logFC_up ${params.logFC_up} --logFC_down ${params.logFC_down} --p_adj ${params.p_adj} --alpha ${params.alpha}
     """
 }
 
