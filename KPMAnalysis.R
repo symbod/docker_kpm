@@ -163,6 +163,9 @@ prepare_matrix <- function(counts, md, condition_name, comparisons, out_dir, net
     mat = merge (mat, cur_df, all=TRUE)
   }
   
+  # Fill NA with 0 
+  mat[is.na(mat)] <- 0
+  
   # filter for only expressed rows 
   mat <- mat[rowSums(mat==0) != (ncol(mat)-1), ]
   # explode id column
