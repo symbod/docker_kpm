@@ -279,10 +279,10 @@ check_options <- function(tags){
 check_options(c('meta_file','count_file','network_file'))
 
 # save arguments
-meta_file_path <- "proteomics-genevention/example_data/plasma/metadata_input.tsv" #args$meta_file
-count_file_path <- "proteomics-genevention/example_data/plasma/normalized_counts.tsv"#args$count_file
-out_dir <- "proteomics-genevention/example_data/test/kpm/plasma"#args$out_dir
-network_file <- "proteomics-genevention/networks/rat_annotated_PPIs_uniprot.sif"
+meta_file_path <- args$meta_file #"proteomics-genevention/example_data/plasma/metadata_input.tsv" #args$meta_file
+count_file_path <- args$count_file #"proteomics-genevention/example_data/plasma/normalized_counts.tsv"#args$count_file
+out_dir <- args$out_dir #"proteomics-genevention/example_data/test/kpm/plasma"#args$out_dir
+network_file <- args$network_file #"proteomics-genevention/networks/rat_annotated_PPIs_uniprot.sif"
 
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE) #stops warnings if folder already exists
 
