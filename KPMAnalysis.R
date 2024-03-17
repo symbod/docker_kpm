@@ -17,15 +17,15 @@ gc()
 suppressPackageStartupMessages({
   required_packages <- c("optparse","argparse","data.table", "tibble", "igraph", "tidyverse", "rjson")
   for(package in required_packages){
-    if(!require(package,character.only = TRUE)) install.packages(package)
+    #if(!require(package,character.only = TRUE)) install.packages(package)
     library(package, character.only = TRUE)
   }
-  if(!require("limma",character.only = TRUE, quietly = TRUE)) BiocManager::install("limma")
+  #if(!require("limma",character.only = TRUE, quietly = TRUE)) BiocManager::install("limma")
   library("limma", character.only = TRUE)
   
   # Install KeyPathwayMineR from github and build vignettes
-  if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
-  if(!require("KeyPathwayMineR",character.only = TRUE)) devtools::install_github("biomedbigdata/keypathwayminer-R", build_vignettes = TRUE)
+  #if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+  #if(!require("KeyPathwayMineR",character.only = TRUE)) devtools::install_github("biomedbigdata/keypathwayminer-R", build_vignettes = TRUE)
   # Load and attach KeyPathwayMineR 
   library("KeyPathwayMineR")
 })
@@ -279,10 +279,10 @@ check_options <- function(tags){
 check_options(c('meta_file','count_file','network_file'))
 
 # save arguments
-meta_file_path <- args$meta_file #"proteomics-genevention/example_data/plasma/metadata_input.tsv" #args$meta_file
-count_file_path <- args$count_file #"proteomics-genevention/example_data/plasma/normalized_counts.tsv"#args$count_file
-out_dir <- args$out_dir #"proteomics-genevention/example_data/test/kpm/plasma"#args$out_dir
-network_file <- args$network_file #"proteomics-genevention/networks/rat_annotated_PPIs_uniprot.sif"
+meta_file_path <- args$meta_file 
+count_file_path <- args$count_file 
+out_dir <- args$out_dir 
+network_file <- args$network_file 
 
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE) #stops warnings if folder already exists
 
@@ -294,11 +294,16 @@ network <- fread(network_file, header=FALSE)
 ## Prepare data ----
 
 #### Correct data ----
+ID_column <- "Animal"
+
 # remove ref
-meta_data <- meta_data[meta_data$ID != "ref",]
+meta_data <- meta_data[meta_data[[ID_column]] != "ref",]
 
 # convert timepoint column
-meta_data[, Timepoint := as.numeric(Timepoint)]
+meta_data[, Timepoint := sapply(Timepoint, function(tp) ifelse(grepl("pre", tp), -as.numeric(gsub("pre", "", tp)), ifelse(grepl("post", tp), as.numeric(gsub("post", "", tp)), as.numeric(tp))))]
+meta_data[, Sample_name := if ("Sample_name" %in% names(meta_data)) Sample_name else if ("Label" %in% names(meta_data)) Label else NULL]
+meta_data[, Column_name := if ("Column_name" %in% names(meta_data)) Column_name else if ("Column" %in% names(meta_data)) Column else NULL]
+#meta_data[, Timepoint := as.numeric(Timepoint)]
 
 ### Rename Columns ---
 
