@@ -3,7 +3,7 @@
 params.output = "./output/"
 params.meta_file = '' // Path to meta.txt
 params.count_file = '' // Path to count.txt
-params.network_file = '' // Path to network file
+params.network_file = ''
 
 params.logFC = true
 params.logFC_up = 1
@@ -11,18 +11,24 @@ params.logFC_down = -1
 params.p_adj = true
 params.alpha = 0.05
 
+// data
+meta_file = file(params.meta_file)
+count_file = file(params.count_file)
+network_file = file(params.network_file)
+
 // scripts
-kpm_analysis_script = Channel.fromPath("${projectDir}/KPMAnalysis.R")
+kpm_analysis_script = file("${projectDir}/KPMAnalysis.R")
+
 
 process kpm_analysis {
-    container 'kadam0/kpmanalysis:0.0.1'
+    container 'kadam0/kpmanalysis:0.0.2'
     publishDir params.output, mode: "copy"
 
     input:
-    path script_file from kpm_analysis_script
-    path meta_file from Channel.fromPath(params.meta_file)
-    path count_file from Channel.fromPath(params.count_file)
-    path network_file from Channel.fromPath(params.network_file)
+    path script_file
+    path meta_file
+    path count_file
+    path network_file
 
     output:                                
     path "*"
@@ -34,5 +40,5 @@ process kpm_analysis {
 }
 
 workflow {
-  kpm_analysis()
+  kpm_analysis(kpm_analysis_script, meta_file, count_file, network_file)
 }
