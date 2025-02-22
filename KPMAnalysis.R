@@ -565,9 +565,14 @@ check_submodules <- function(kpm_result, result_df, ind_mat){
     df <- df[rowSums(df==0) != (ncol(df)-1), ]
     ### run kpm
     if (nrow(df) > 0 && nrow(constrained_network) > 0){
-      result <- loop_kpm(min_k = 5, max_k = 10, l_min = 0, num_pathways = 1,
-                         ind_mat=data.frame(df), network=file.path(out_dir,"constrained.sif"))
-      result_df[comp] <- result_df$node %in% result@configurations[[1]]@pathways$`Pathway-1`@nodes$node
+      if (nrow(df) == 1) {
+        # If there's only one row in df, skip loop_kpm and use df directly.
+        result_df[comp] <- result_df$node %in% df[[1]]
+      } else {
+        result <- loop_kpm(min_k = 5, max_k = 10, l_min = 0, num_pathways = 1,
+                           ind_mat=data.frame(df), network=file.path(out_dir,"constrained.sif"))
+        result_df[comp] <- result_df$node %in% result@configurations[[1]]@pathways$`Pathway-1`@nodes$node
+      }
     } else if (nrow(df) > 0 && !nrow(constrained_network) > 0) {
       result_df[comp] <- result_df$node %in% df[[1]]
     } else {
